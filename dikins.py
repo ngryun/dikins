@@ -18,16 +18,16 @@ if 'key' not in st.session_state:
 
 print(st.session_state.key)
 thread_id = st.session_state.key
-assistant_id = 'asst_kX5BLago4lKTZS19W5K3rXco'
+assistant_id = 'asst_FySMLOEwlZUKP3EPP7zYp2wy'
 my_assistant = client.beta.assistants.retrieve(assistant_id)
 thread_messages = client.beta.threads.messages.list(thread_id,order="asc")
 
-st.header('수학 질문 챗봇 TEST ver')
-st.caption("대수적 사고를 발전시키기 위함")
-msg = "수식을 입력할 때 제곱(^) 곱하기(*) 나누기(/) 등의 연산명령어를 이용하면 됩니다. 😊✨"
+st.header('다독임_회원_남궁연과의 대화')
+st.caption("남궁연의 사고와 철학에 기반하여 대답합니다.")
+msg = "안녕하세요 선생님 😊✨"
 with st.chat_message("assistant", avatar="seoli.png"):
     st.markdown(msg)
-
+    
 if "text_boxes" not in st.session_state:
     st.session_state.text_boxes = []
 
@@ -39,7 +39,7 @@ for msg in thread_messages.data:
         with st.chat_message(msg.role):
             st.markdown(msg.content[0].text.value)
 
-prompt = st.chat_input("질문하고 싶은 것을 입력해봐!")
+prompt = st.chat_input("남궁연에게 물어보세요")
 
 if prompt:
   st.chat_message("user").write(prompt)
@@ -56,7 +56,7 @@ if prompt:
         assistant_id=assistant_id,
         stream = True
     )
-    with st.spinner("..생각중.."):
+    with st.spinner("..고심중.."):
         for event in stream:
             print(event.data.object)
             if event.data.object == 'thread.message.delta':
@@ -66,7 +66,6 @@ if prompt:
                         result = "".join(report).strip()
                         res_box.markdown(f'*{result}*')
                         success = True
-        print("야호" + event.data.id)
         run = client.beta.threads.runs.retrieve(
         thread_id=thread_id,
         run_id=event.data.id
